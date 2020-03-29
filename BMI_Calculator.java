@@ -46,47 +46,32 @@ public class BMI_Calculator extends Application {
             maleCheckbox.setSelected(true);
             femaleCheckbox.setSelected(false);
         });
+
         femaleCheckbox.setOnAction(e -> {
             femaleCheckbox.setSelected(true);
             maleCheckbox.setSelected(false);
         });
 
         exitButton.setOnAction(e -> Platform.exit());
+
         calculateButton.setOnAction(e -> {
             boolean isMen = maleCheckbox.isSelected();
             String mass = massField.getText();
             String height = heightField.getText();
-            if (mass.trim().length() == 0){
-                msg.setText("Weight is missing");
-            }else if(height.trim().length() == 0){
-                msg.setText("Body size ist missing!");
+            if (mass.trim().length() == 0 || height.trim().length() == 0){
+                msg.setText("Input is missing");
             }else{
                 double massValue = 0.0;
                 double heightValue = 0.0;
                 double bmi = 0.0;
-                boolean hasError = false;
-
                 try{
                     massValue = Math.abs(Double.parseDouble(mass));
                     heightValue = Math.abs(Double.parseDouble(height));
-                }catch (NumberFormatException e1){
-                    e1.printStackTrace();
-                    e1.getMessage();
-                    hasError = true;
-                }
-
-                try{
                     bmi = calculateBMI(massValue, heightValue);
-                }catch (ArithmeticException e2){
-                    e2.printStackTrace();
-                    e2.getMessage();
-                    hasError = true;
-                }
-
-                if (hasError){
-                    msg.setText(String.format("Error, bad input"));
-                }else {
                     msg.setText(String.format("%s, your BMI: %.2f",getStatus(bmi, isMen), bmi));
+                }catch (NumberFormatException | ArithmeticException ex ){
+                    ex.printStackTrace();
+                    msg.setText(String.format("Error, bad input"));
                 }
             }
         });
